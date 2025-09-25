@@ -15,7 +15,7 @@ inline bool is_valid_base(char c) {
 
 int main(int argc, char** argv) {
     if (argc < 5) {
-        std::cerr << "Usage: " << argv[0] << " <input.fna> <k> <output_counts.csv> <output_kmers.csv>\n";
+        std::cerr << "Usage: " << argv[0] << " <input.fna> <k> <output_counts.csv> <output_kmers.txt>\n";
         return 1;
     }
 

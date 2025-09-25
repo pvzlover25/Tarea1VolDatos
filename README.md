@@ -36,12 +36,12 @@
 
     - **Uso:**
   ```bash
-  ./extract_kmers <input.fna> <k> <output_prefix>
+  ./extract_kmers <input.fna> <k> <output_counts.csv> <output_kmers.txt>
   ```
 
   Ejemplo:
   ```bash
-  ./extract_kmers ../data/genoma1.fna 21 ../results/kmers/k21/genoma1
+  ./extract_kmers ../data/genoma1.fna 21 ../results/kmers/k21/genoma1_counts.csv ../results/kmers/k21/genoma1_kmers.txt
   ```
 
 ---
