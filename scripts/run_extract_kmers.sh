@@ -1,15 +1,16 @@
 #!/bin/bash
 set -e  # detener si ocurre un error
+cd "$(dirname "$0")/.." # ir a la raíz del proyecto
+
+# --- Compilar extract_kmers.cpp ---
+g++ -std=c++17 -O2 src/extract_kmers.cpp -o src/extract_kmers
 
 # Carpeta de entrada y salida
 DATA_DIR="data"
-OUT_DIR="results/ground_truth"
+OUT_DIR="results/kmers"
 
 # Valores de k a usar
 K_LIST=(21 31)
-
-# Valores de phi (puedes ajustar según memoria)
-PHI_LIST=(1e-3 1e-4 1e-5)
 
 for K in "${K_LIST[@]}"; do
   echo ">>> Procesando k=$K"
@@ -24,11 +25,10 @@ for K in "${K_LIST[@]}"; do
 
     COUNTS_FILE="$K_OUT_DIR/${BASENAME}_counts.csv"
     KMERS_FILE="$K_OUT_DIR/${BASENAME}_kmers.txt"
-    HH_FILE="$K_OUT_DIR/${BASENAME}_HH.csv"
 
-    echo "    Archivo: $f"
+    echo "Archivo: $f"
     # Limpiar salidas anteriores
-    rm -f "$COUNTS_FILE" "$KMERS_FILE" "$HH_FILE"
+    rm -f "$COUNTS_FILE" "$KMERS_FILE"
 
     ./src/extract_kmers "$f" $K "$COUNTS_FILE" "$KMERS_FILE"
   done
