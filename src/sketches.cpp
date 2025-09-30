@@ -1,5 +1,6 @@
 // sketches.cpp
-// Compilar: g++ -O3 -std=c++17 sketches.cpp -o sketches_
+// Compilar: g++ -O3 -std=c++17 sketches.cpp -o sketches
+// Uso: ./sketches counts.csv kmers.csv [phi]
 // Requiere utils.cpp en el mismo directorio (con canonical(), read_counts(), read_fasta()).
 
 #include <iostream>
@@ -17,9 +18,8 @@
 
 using namespace std;
 
-// ------------ hash ------------
 static inline uint64_t hash_u64(const string &s, uint64_t salt = 1469598103934665603ULL) {
-    // use std::hash + salt mixing (simple and portable)
+
     uint64_t h = std::hash<std::string>{}(s);
     h ^= salt + 0x9e3779b97f4a7c15ULL + (h<<6) + (h>>2);
     return h;
@@ -27,7 +27,6 @@ static inline uint64_t hash_u64(const string &s, uint64_t salt = 146959810393466
 
 static inline uint64_t hash_u64_from_u64(uint64_t x, uint64_t salt) {
     x ^= salt + 0x9e3779b97f4a7c15ULL + (x<<6) + (x>>2);
-    // scramble with splitmix64
     uint64_t z = (x + 0x9e3779b97f4a7c15ULL);
     z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
     z = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
@@ -279,7 +278,6 @@ EvalResult evaluate_towersketch(const vector<pair<string,uint64_t>> &counts, uin
     return res;
 }
 
-// Uso: ./sketches counts.csv kmers.csv [phi]
 int main(int argc, char **argv) {
     if (argc < 3) {
         cerr << "Uso: " << argv[0] << " counts.csv kmers.csv [phi]\n";
