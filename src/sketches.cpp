@@ -13,7 +13,7 @@
 #include <cmath>
 #include <utility>
 #include <limits>
-#include "utils.cpp" // tu archivo con canonical(), read_counts(), read_fasta()
+#include "utils.cpp" // archivo con canonical(), read_counts(), read_fasta()
 
 using namespace std;
 
