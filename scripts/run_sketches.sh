@@ -6,10 +6,10 @@ cd "$(dirname "$0")/.." # ir a la raíz del proyecto
 g++ -std=c++17 -O2 /home/pvzlover25/Desktop/Tarea1VolDatos/src/sketches.cpp -o sketches
 
 #Carpeta de entrada y salida
-DATA_DIR_21="/home/pvzlover25/Desktop/Tarea1VolDatos/results/kmers/k21"
-DATA_DIR_31="/home/pvzlover25/Desktop/Tarea1VolDatos/results/kmers/k31"
-OUT_DIR_21="/home/pvzlover25/Desktop/Tarea1VolDatos/results/sketches/k21"
-OUT_DIR_31="/home/pvzlover25/Desktop/Tarea1VolDatos/results/sketches/k31"
+DATA_DIR_21="results/kmers/k21"
+DATA_DIR_31="results/kmers/k31"
+OUT_DIR_21="results/sketches/k21"
+OUT_DIR_31="results/sketches/k31"
 
 #crear carpetas de salida si no existen
 mkdir -p "$OUT_DIR_21"
