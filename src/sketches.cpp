@@ -1,7 +1,7 @@
 // sketches.cpp
 // Compilar: g++ -O3 -std=c++17 sketches.cpp -o sketches
 // Uso: ./sketches counts.csv kmers.csv [phi]
-// Requiere utils.cpp en el mismo directorio (con canonical(), read_counts(), read_fasta()).
+// Requiere utils.cpp en el mismo directorio
 
 #include <iostream>
 #include <fstream>
@@ -14,7 +14,7 @@
 #include <cmath>
 #include <utility>
 #include <limits>
-#include "utils.cpp" // archivo con canonical(), read_counts(), read_fasta()
+#include "utils.cpp"
 
 using namespace std;
 
@@ -44,8 +44,7 @@ public:
     }
 
     void insert(const string &kmer) {
-        string cano = canonical(kmer);
-        uint64_t key = hash_u64(cano, seed_);
+        uint64_t key = hash_u64(kmer, seed_);
         for (int i = 0; i < d_; ++i) {
             uint64_t h = hash_u64_from_u64(key, (uint64_t)i ^ seed_);
             uint32_t idx = (uint32_t)(h % (uint64_t)w_);
@@ -58,8 +57,7 @@ public:
     }
 
     int64_t estimate(const string &kmer) const {
-        string cano = canonical(kmer);
-        uint64_t key = hash_u64(cano, seed_);
+        uint64_t key = hash_u64(kmer, seed_);
         vector<int64_t> estimates; estimates.reserve(d_);
         for (int i = 0; i < d_; ++i) {
             uint64_t h = hash_u64_from_u64(key, (uint64_t)i ^ seed_);
@@ -107,8 +105,7 @@ public:
     }
 
     void insert(const string &kmer) {
-        string cano = canonical(kmer);
-        uint64_t key = hash_u64(cano, seed_);
+        uint64_t key = hash_u64(kmer, seed_);
         for (const Level &lvl_const : levels_) {
 
             Level &lvl = const_cast<Level&>(lvl_const);
@@ -132,8 +129,7 @@ public:
 
 
     uint64_t estimate(const string &kmer) const {
-        string cano = canonical(kmer);
-        uint64_t key = hash_u64(cano, seed_);
+        uint64_t key = hash_u64(kmer, seed_);
         uint64_t best = UINT64_MAX;
         for (const Level &lvl : levels_) {
             uint64_t m = UINT64_MAX;
