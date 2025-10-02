@@ -174,9 +174,6 @@ struct EvalResult {
     double mean_abs_err;
     double median_abs_err;
     double max_abs_err;
-    double precision;
-    double recall;
-    double f1;
     uint64_t tp, fp, fn;
 };
 
@@ -211,9 +208,6 @@ EvalResult evaluate_countsketch(const vector<pair<string,uint64_t>> &counts, uin
     sort(abs_errs.begin(), abs_errs.end());
     double median = abs_errs.empty() ? 0.0 : (double)abs_errs[abs_errs.size()/2];
     double mean = counts.empty() ? 0.0 : sum_abs / (double)counts.size();
-    double precision = (tp + fp) == 0 ? 0.0 : (double)tp / (double)(tp + fp);
-    double recall = (tp + fn) == 0 ? 0.0 : (double)tp / (double)(tp + fn);
-    double f1 = (precision + recall) == 0 ? 0.0 : 2.0 * precision * recall / (precision + recall);
 
     EvalResult res;
     res.method = "CountSketch";
@@ -221,9 +215,7 @@ EvalResult evaluate_countsketch(const vector<pair<string,uint64_t>> &counts, uin
     res.mean_abs_err = mean;
     res.median_abs_err = median;
     res.max_abs_err = (double)max_abs;
-    res.precision = precision;
-    res.recall = recall;
-    res.f1 = f1;
+    
     res.tp = tp; res.fp = fp; res.fn = fn;
     return res;
 }
@@ -259,9 +251,6 @@ EvalResult evaluate_towersketch(const vector<pair<string,uint64_t>> &counts, uin
     sort(abs_errs.begin(), abs_errs.end());
     double median = abs_errs.empty() ? 0.0 : (double)abs_errs[abs_errs.size()/2];
     double mean = counts.empty() ? 0.0 : sum_abs / (double)counts.size();
-    double precision = (tp + fp) == 0 ? 0.0 : (double)tp / (double)(tp + fp);
-    double recall = (tp + fn) == 0 ? 0.0 : (double)tp / (double)(tp + fn);
-    double f1 = (precision + recall) == 0 ? 0.0 : 2.0 * precision * recall / (precision + recall);
 
     EvalResult res;
     res.method = "TowerSketch-CMCU";
@@ -271,9 +260,6 @@ EvalResult evaluate_towersketch(const vector<pair<string,uint64_t>> &counts, uin
     res.mean_abs_err = mean;
     res.median_abs_err = median;
     res.max_abs_err = (double)max_abs;
-    res.precision = precision;
-    res.recall = recall;
-    res.f1 = f1;
     res.tp = tp; res.fp = fp; res.fn = fn;
     return res;
 }
@@ -298,17 +284,17 @@ int main(int argc, char **argv) {
 
     //CountSketch
     vector<int> ds = {3,5,7};
-    vector<int> ws = {1<<12, 1<<14, 1<<16};
+    vector<int> ws = {1<<7, 1<<8, 1<<9};
 
     //TowerSketch
     vector<vector<pair<int,int>>> ts_configs;
-    ts_configs.push_back({{2,1<<12},{2,1<<14}});
-    ts_configs.push_back({{2,1<<13},{2,1<<15}});
-    ts_configs.push_back({{3,1<<12},{2,1<<14}});
-    ts_configs.push_back({{2,1<<14}});
+    ts_configs.push_back({{2,1<<7},{2,1<<8}});
+    ts_configs.push_back({{2,1<<9},{2,1<<10}});
+    ts_configs.push_back({{3,1<<7},{2,1<<9}});
+    ts_configs.push_back({{2,1<<9}});
 
     ofstream fout(out);
-    fout << "method,params,mem_bytes,mean_abs_err,median_abs_err,max_abs_err,precision,recall,f1,tp,fp,fn\n";
+    fout << "method,params,mem_bytes,mean_abs_err,median_abs_err,max_abs_err.tp,fp,fn\n";
 
     // Evaluar CountSketch
     for (int d : ds) {
@@ -317,8 +303,7 @@ int main(int argc, char **argv) {
             EvalResult r = evaluate_countsketch(counts, N, d, w, phi);
             fout << r.method << ",\"d=" << d << ",w=" << w << "\","
                  << r.mem_bytes << "," << r.mean_abs_err << "," << r.median_abs_err << ","
-                 << r.max_abs_err << "," << r.precision << "," << r.recall << "," << r.f1 << ","
-                 << r.tp << "," << r.fp << "," << r.fn << "\n";
+                 << r.max_abs_err << "," << r.tp << "," << r.fp << "," << r.fn << "\n";
             fout.flush();
         }
     }
@@ -336,8 +321,7 @@ int main(int argc, char **argv) {
         cerr << "[TS] " << params << " ...\n";
         EvalResult r = evaluate_towersketch(counts, N, cfg, phi);
         fout << r.method << ",\"" << params << "\"," << r.mem_bytes << "," << r.mean_abs_err << ","
-             << r.median_abs_err << "," << r.max_abs_err << "," << r.precision << "," << r.recall << ","
-             << r.f1 << "," << r.tp << "," << r.fp << "," << r.fn << "\n";
+             << r.median_abs_err << "," << r.max_abs_err << "," << r.tp << "," << r.fp << "," << r.fn << "\n";
         fout.flush();
     }
 
