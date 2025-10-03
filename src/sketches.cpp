@@ -289,7 +289,15 @@ int main(int argc, char **argv) {
     ts_configs.push_back({{3,1<<7},{2,1<<9}});
     ts_configs.push_back({{2,1<<9}});
 
-    ofstream fout(out);
+    string out_new;
+    size_t pos = out.rfind(".csv");
+    if (pos != string::npos) {
+        out_new = out.substr(0, pos) + "_results.csv";
+    } else {
+        out_new = out + "_results.csv";
+    }
+
+    ofstream fout(out_new);
     fout << "method,params,mem_bytes,mean_abs_err,median_abs_err,max_abs_err.tp,fp,fn\n";
 
     // Evaluar CountSketch
@@ -322,6 +330,6 @@ int main(int argc, char **argv) {
     }
 
     fout.close();
-    cout << "Listo. Resultados en " << out << "\n";
+    cout << "Listo. Resultados en " << out_new << "\n";
     return 0;
 }
