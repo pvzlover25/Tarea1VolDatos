@@ -3,7 +3,7 @@ set -e #detener si ocurre un error
 cd "$(dirname "$0")/.." # ir a la raíz del proyecto
 
 #compilar
-g++ -std=c++17 -O2 /home/pvzlover25/Desktop/Tarea1VolDatos/src/sketches.cpp -o sketches
+g++ -std=c++17 -O2 src/sketches.cpp -o sketches
 
 #Carpeta de entrada y salida
 DATA_DIR_21="results/kmers/k21"
